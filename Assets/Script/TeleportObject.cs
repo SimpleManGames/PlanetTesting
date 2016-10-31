@@ -1,24 +1,62 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(MeshRenderer))]
 public class TeleportObject : MonoBehaviour
 {
-    [HideInInspector]
-    public GameObject gameObj;
-    [HideInInspector]
-    public float time;
+    public TeleportEffect teleportEffect;
+    private float time;
 
-    public bool canTeleport = true;
+    private bool _canTeleport = true;
+    public bool CanTeleport
+    {
+        get { return _canTeleport; }
+        set
+        {
+            _canTeleport = value;
+            if (value == false) time = 0.0f;
+        }
+    }
 
-    void Update() {
-        if (time >= PortalManager.instance.teleportDelay)
+    private TeleportEffect obj;
+    private BoxCollider2D box2D;
+    private MeshRenderer meshRend;
+
+    void Start()
+    {
+        time = PortalManager.instance.teleportDelay;
+        box2D = GetComponent<BoxCollider2D>();
+        meshRend = GetComponent<MeshRenderer>();
+    }
+
+    void Update()
+    {
+        _canTeleport = (time >= PortalManager.instance.teleportDelay) ? true : false;
+        if (!_canTeleport) time += Time.deltaTime;
+
+        if (obj != null)
         {
-            canTeleport = true;
+            if (obj.GetComponent<TeleportEffect>().hasArrived)
+            {
+                transform.position = obj.movePos;
+                box2D.enabled = true;
+                meshRend.enabled = true;
+                Destroy(obj.gameObject);
+            }
+            else
+            {
+                box2D.enabled = false;
+                meshRend.enabled = false;
+            }
         }
-        else
-        {
-            canTeleport = false;
-            time += Time.deltaTime;
-        }
+    }
+
+    public void SpawnEffect(Vector3 pos)
+    {
+        obj = Instantiate(teleportEffect.gameObject).GetComponent<TeleportEffect>();
+        obj.teleportingObj = this.gameObject;
+        obj.gameObject.transform.position = this.transform.position;
+        obj.MoveTowards(pos);
     }
 }

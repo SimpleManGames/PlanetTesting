@@ -12,7 +12,6 @@ public class Portal : MonoBehaviour
     public PortalBehaviour behaviour;
     public Portal toPortal;
 
-
     void Start()
     {
         if (behaviour == PortalBehaviour.Linked && toPortal == null)
@@ -24,7 +23,7 @@ public class Portal : MonoBehaviour
         TeleportObject otherTeleport = other.GetComponent<TeleportObject>();
         if (otherTeleport != null)
         {
-            if (otherTeleport.canTeleport)
+            if (otherTeleport.CanTeleport)
             {
                 if (behaviour == PortalBehaviour.Random)
                 {
@@ -32,8 +31,9 @@ public class Portal : MonoBehaviour
                     while(toPortal == this)
                         toPortal = PortalManager.instance.GetRandomPortal;
                 }
-                other.transform.position = toPortal.transform.position;
-                otherTeleport.time = 0f;
+                otherTeleport.SpawnEffect(toPortal.transform.position);
+
+                otherTeleport.CanTeleport = false;
             }
         }
     }
