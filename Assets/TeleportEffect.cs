@@ -1,22 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(LineRenderer))]
 public class TeleportEffect : MonoBehaviour
 {
-    private LineRenderer line;
-    //[HideInInspector]
+    [HideInInspector]
     public Vector3 movePos;
     public float speed;
     [HideInInspector]
     public bool hasArrived = false;
     [HideInInspector]
     public GameObject teleportingObj;
-
-    void Start()
-    {
-        line = GetComponent<LineRenderer>();
-    }
 
     void Update()
     {
