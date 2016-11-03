@@ -2,35 +2,35 @@
 using System.Collections;
 using System.Collections.Generic;
 
-//[ExecuteInEditMode]
-public class ParticleColor : MonoBehaviour
-{
-    public Color particleColor;
+[ExecuteInEditMode]
+public class ParticleColor : MonoBehaviour {
+    
     private Color lastColor;
-    private Color regColor;
     private List<ParticleSystem> particleSys = new List<ParticleSystem>();
+    [SerializeField]
+    [Tooltip("The color of the childrens particle effects.")]
+    private Color _color;
+    public Color Color {
+        get { return _color; }
+        set { this._color = value; }
+    }
 
-    void SetParticles()
-    {
-        if (particleSys.Count == 0)
-            for (int i = 0; i < transform.childCount; i++)
-            {
+    void SetParticles( ) {
+        if ( particleSys.Count == 0 )
+            for ( int i = 0; i < transform.childCount; i++ ) {
                 ParticleSystem childParticle;
-                if ((childParticle = transform.GetChild(i).GetComponent<ParticleSystem>()) != null)
-                    particleSys.Add(childParticle);
+                if ( ( childParticle = transform.GetChild( i ).GetComponent<ParticleSystem>() ) != null )
+                    particleSys.Add( childParticle );
             }
     }
 
-    void Update()
-    {
+    void Update( ) {
         SetParticles();
-        if (particleColor != lastColor)
-        {
-            foreach (ParticleSystem p in particleSys)
-                if (p.gameObject.tag == "Alpha") p.startColor = new Color(particleColor.r, particleColor.g, particleColor.b, 140.0f);
-                else p.startColor = particleColor;
+        if ( Color != lastColor ) {
+            foreach ( ParticleSystem p in particleSys )
+                p.startColor = (p.gameObject.tag == "Alpha") ? p.startColor = new Color( Color.r, Color.g, Color.b, 140.0f ) : p.startColor = Color;
 
-            lastColor = particleColor;
+            lastColor = Color;
         }
     }
 }

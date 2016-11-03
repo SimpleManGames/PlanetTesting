@@ -1,62 +1,60 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(BoxCollider2D))]
-[RequireComponent(typeof(MeshRenderer))]
-public class TeleportObject : MonoBehaviour
-{
-    public TeleportEffect teleportEffect;
+[RequireComponent( typeof( BoxCollider2D ) )]
+[RequireComponent( typeof( MeshRenderer ) )]
+public class TeleportObject : MonoBehaviour {
     private float time;
 
     private bool _canTeleport = true;
-    public bool CanTeleport
-    {
+    public bool CanTeleport {
         get { return _canTeleport; }
-        set
-        {
-            _canTeleport = value;
-            if (value == false) time = 0.0f;
+        set {
+            if ((_canTeleport = value) == false )
+                time = 0.000f;
         }
+    }
+
+    [SerializeField]
+    [Tooltip("The prefeb of the effect that is going to be used to represent the movement between portals.")]
+    private TeleportEffect _teleportEffect;
+    public TeleportEffect TeleportEffect {
+        get { return _teleportEffect; }
+        set { this._teleportEffect = value; }
     }
 
     private TeleportEffect obj;
     private BoxCollider2D box2D;
     private MeshRenderer meshRend;
 
-    void Start()
-    {
-        time = PortalManager.instance.teleportDelay;
+    void Start( ) {
+        time = PortalManager.instance.TeleportDelay;
         box2D = GetComponent<BoxCollider2D>();
         meshRend = GetComponent<MeshRenderer>();
     }
 
-    void Update()
-    {
-        _canTeleport = (time >= PortalManager.instance.teleportDelay) ? true : false;
-        if (!_canTeleport) time += Time.deltaTime;
+    void Update( ) {
+        _canTeleport = ( time >= PortalManager.instance.TeleportDelay ) ? true : false;
+        if ( !_canTeleport )
+            time += Time.deltaTime;
 
-        if (obj != null)
-        {
-            if (obj.GetComponent<TeleportEffect>().hasArrived)
-            {
-                transform.position = obj.movePos;
+        if ( obj != null ) {
+            if ( obj.GetComponent<TeleportEffect>().HasArrived ) {
+                transform.position = obj.MovePosition;
                 box2D.enabled = true;
                 meshRend.enabled = true;
-                Destroy(obj.gameObject);
-            }
-            else
-            {
+                Destroy( obj.gameObject );
+            } else {
                 box2D.enabled = false;
                 meshRend.enabled = false;
             }
         }
     }
 
-    public void SpawnEffect(Vector3 pos)
-    {
-        obj = Instantiate(teleportEffect.gameObject).GetComponent<TeleportEffect>();
-        obj.teleportingObj = this.gameObject;
+    public void SpawnEffect( Vector3 pos ) {
+        obj = Instantiate( TeleportEffect.gameObject ).GetComponent<TeleportEffect>();
+        obj.TeleportingObj = this.gameObject;
         obj.gameObject.transform.position = this.transform.position;
-        obj.MoveTowards(pos);
+        obj.MoveTowards( pos );
     }
 }
