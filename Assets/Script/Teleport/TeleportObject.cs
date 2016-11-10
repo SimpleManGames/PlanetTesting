@@ -33,18 +33,18 @@ public class TeleportObject : MonoBehaviour {
         meshRend = GetComponent<MeshRenderer>();
     }
 
-    void Update( ) {
+    void FixedUpdate( ) {
         _canTeleport = ( time >= PortalManager.instance.TeleportDelay ) ? true : false;
         if ( !_canTeleport )
             time += Time.deltaTime;
 
         if ( obj != null ) {
             if ( obj.GetComponent<TeleportEffect>().HasArrived ) {
-                transform.position = obj.MovePosition;
                 box2D.enabled = true;
                 meshRend.enabled = true;
                 Destroy( obj.gameObject );
             } else {
+                transform.position = obj.transform.position;
                 box2D.enabled = false;
                 meshRend.enabled = false;
             }

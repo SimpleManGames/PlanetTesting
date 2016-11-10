@@ -20,13 +20,8 @@ public class TeleportEffect : MonoBehaviour {
 
     private float _moveSpeed;
     public float MoveSpeed {
-        get {
-            return _moveSpeed;
-        }
-
-        set {
-            this._moveSpeed = value;
-        }
+        get { return _moveSpeed; } 
+        set { this._moveSpeed = value; }
     }
 
     private bool _hasArrived = false;
